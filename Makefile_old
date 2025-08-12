@@ -1,0 +1,56 @@
+OBJ= parameter_mod.o parameter_apex_mod.o namelist_mod.o variable_mod.o message_passing_mod.o chemistry_mod.o time_mod.o photo_production_mod_drob.o atomic_mod.o conductance_mod.o exb_mod.o hardy_mod.o misc_mod.o grid_mod.o grid3-3.18.o  hwm93.o madala_sevp_dp.o  nrlmsise00.o  sami3-3.18.o  sevp13_dp.o hwm14.o heating.o solvers.o photo_production.o output.o chemistry.o potential.o exb_transport.o misc.o neutral.o shutdown.o hardy_sami3.o weimer_omni.o weimer_grid.o weimer_phi.o apexsh.o magfld.o
+
+# gfortran
+
+#f90  = /opt/openmpi-1.4.3_gfortran/bin/mpif90 -O2 -fno-automatic  -mcmodel=large 
+#f77  = gfortran -fno-automatic  -mcmodel=large  -O2
+
+#f90  = /opt/openmpi-4.0.5_gfortran/bin/mpif90 -O2 -fno-automatic  -mcmodel=large 
+#f77  = gfortran -fno-automatic  -mcmodel=large  -O2
+
+# gfortran/profile
+
+#f90  = /opt/openmpi-1.4.3_gfortran/bin/mpif90  -fno-automatic -pg
+#f77  = gfortran -fno-automatic -pg
+
+# debug
+
+#f90 = /opt/openmpi-1.4.3_gfortran/bin/mpif90 -fno-automatic -g -fcheck=all -Wall
+#f77 = gfortran -fno-automatic -g -fcheck=all -Wall 
+
+# intel ifort
+
+  f90 = /opt/openmpi-4.0.5_intel/bin/mpif90 -fp-model strict -save -O2 -mcmodel=large -shared-intel
+  f77 = ifort  -fp-model strict -save -O2 -mcmodel=large -shared-intel
+
+# debug
+
+#  f90 = mpif90 -save -C -traceback -shared-intel -vec_report0
+#  f77 = ifort  -save -C -traceback -shared-intel -vec_report0
+
+.SUFFIXES : .o .f90 .f .F90 .F
+
+
+%.o:%.mod
+
+.f.o:
+	$(f77) -c $*.f 
+
+.f90.o:
+	$(f90) -c $*.f90
+
+.F90.o:
+	$(f90) -c $*.F90
+
+.F.o:
+	$(f90) -c $*.F
+
+clean:
+	rm *.o *.x *.mod
+
+sami3.x:	$(OBJ)
+	$(f90) -o sami3.x $(OBJ)
+
+#$(OBJ): com3_mpi-2.00.inc
+#$(OBJ): param3_mpi-2.00.inc
+
